@@ -42,7 +42,14 @@ const signup = async (formData) => {
     if (json.err) {
       throw new Error(json.err);
     }
-    return json;
+    //return json;
+    if (json.token) {
+      // persist the token to the browser
+      localStorage.setItem('token', json.token);
+
+      const user = JSON.parse(atob(json.token.split('.')[1]));
+      return user;
+    }
   } catch (err) {
     console.log(err);
     throw err;
@@ -56,8 +63,13 @@ const getUser = () =>  {
   return user;
 }
 
+const signout = () => {
+  localStorage.removeItem('token');
+};
+
 export {
   signup,
   signin,
   getUser,
+  signout,
 };
